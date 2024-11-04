@@ -1,34 +1,78 @@
 'use client';
 
 import { Heart, MessageCircle, UserCheck } from 'lucide-react'
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import Footer from '../components/footer/footer';
+import { useState } from 'react';
+import { FaBars, FaTimes } from 'react-icons/fa';
+
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+  { name: "Privacy Policy", href: "/privacy" },
+];
 
 
 export default function HomePage() {
+  const { pathname } = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
   return (
     <div>
       <header className="relative min-h-screen" style={{ backgroundImage: "url('/images/couple_image.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="absolute top-0 left-0 right-0 z-10 container mx-auto px-4 py-6 flex justify-between items-center">
-          <div className="flex space-x-6">
-            <Link className="text-gray-200 hover:text-gray-900" to="/">
-              Home
-            </Link>
-            <Link className="text-gray-200 hover:text-gray-900" to="/about">
-              About
-            </Link>
-            <Link className="text-gray-200 hover:text-gray-900" to="/contact">
-              Contact
-            </Link>
+      <nav className="container border-gray-300">
+      {/* <ContainerWrapper> */}
+        <div className="container flex justify-between items-center py-4 px-5">
+          <Link to="/">
+            {/* <img src={Logo} alt="Logo" className="h-[5rem] w-[5rem]" /> */}
+            <h2 className="container text-2xl font-serif sm:pl-0 md:pl-20 text-black">Boom Boom</h2>
+
+          </Link>
+
+          <div className="md:hidden" onClick={toggleMenu}>
+            {isOpen ? <FaTimes className="h-8 w-8 text-gray-800" /> : <FaBars className="h-8 w-8 text-gray-800" />}
           </div>
-          <div className="text-2xl font-serif">Boom Boom</div>
-          <div>
-            <Link className="text-gray-200 hover:text-gray-900" to="/privacy">
-              Privacy Policy
-            </Link>
-          </div>
+
+          {/* Desktop Links */}
+          <ul className="hidden md:flex items-center gap-6">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                to={link.href}
+                className={`text-lg font-medium hover:text-pink-500 p-2 ${
+                  pathname === link.href ? "text-black" : "text-gray-600"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </ul>
         </div>
+
+        {/* Mobile Links */}
+        {isOpen && (
+          <ul className="md:hidden flex flex-col items-center gap-5 mt-5 p-5">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                to={link.href}
+                className={`${
+                  pathname === link.href ? "text-black" : "text-gray-900"
+                } text-lg hover:bg-gray-100 p-3 hover:text-pink-500 rounded-lg`}
+                onClick={toggleMenu}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </ul>
+        )}
+      {/* </ContainerWrapper> */}
+    </nav>
       </header>
       <main className="absolute bottom-0 left-0 right-0 pt-20">
         <div className="container mx-auto px-4">

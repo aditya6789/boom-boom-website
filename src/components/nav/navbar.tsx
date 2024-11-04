@@ -1,37 +1,73 @@
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { FaBars, FaTimes } from "react-icons/fa";
 
+// import ContainerWrapper from "@/utils/container_wrapper";
 
+const navLinks = [
+  { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
+  { name: "Privacy Policy", href: "/privacy" },
+];
 
+export default function Navbar() {
+  const { pathname } = useLocation();
+  const [isOpen, setIsOpen] = useState(false);
 
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
 
-export default function Navbar(){
-    return (
-        <div className=" w-fuabsolute top-0 left-0 right-0 z-10 container mx-auto px-4 py-6 flex justify-between items-center">
-        <div className="flex space-x-6">
-          <Link  to="/">
-          <p className="text-gray-600 hover:text-gray-900">Home</p>
-            
+  return (
+    <nav className="container border-gray-300">
+      {/* <ContainerWrapper> */}
+        <div className="container flex justify-between items-center py-4 px-5">
+          <Link to="/">
+            {/* <img src={Logo} alt="Logo" className="h-[5rem] w-[5rem]" /> */}
+            <h2 className="container text-2xl font-serif md:pl-10 text-black">Boom Boom</h2>
+
           </Link>
-          <Link  to="/about">
-          <p className="text-gray-600 hover:text-gray-900">About</p>
 
-            
-          </Link>
-          <Link  to="/contact">
-          <p className="text-gray-600 hover:text-gray-900">Contact</p>
+          <div className="md:hidden" onClick={toggleMenu}>
+            {isOpen ? <FaTimes className="h-8 w-8 text-gray-800" /> : <FaBars className="h-8 w-8 text-gray-800" />}
+          </div>
 
-            
-          </Link>
+          {/* Desktop Links */}
+          <ul className="hidden md:flex items-center gap-6">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                to={link.href}
+                className={`text-lg font-medium hover:text-pink-500 p-2 ${
+                  pathname === link.href ? "text-black" : "text-gray-600"
+                }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </ul>
         </div>
-        <div className="text-2xl font-serif">Boom Boom</div>
-        <div>
-          <Link  to="/privacy">
-          <p className="text-gray-600 hover:text-gray-900">Privacy Policy</p>
 
-            
-          </Link>
-        </div>
-      </div>
-    )
-
-};
+        {/* Mobile Links */}
+        {isOpen && (
+          <ul className="md:hidden flex flex-col items-center gap-5 mt-5">
+            {navLinks.map((link, index) => (
+              <Link
+                key={index}
+                to={link.href}
+                className={`${
+                  pathname === link.href ? "text-black" : "text-gray-400"
+                } text-lg hover:bg-gray-100 p-3 hover:text-pink-500
+                 rounded-lg`}
+                onClick={toggleMenu}
+              >
+                {link.name}
+              </Link>
+            ))}
+          </ul>
+        )}
+      {/* </ContainerWrapper> */}
+    </nav>
+  );
+}
